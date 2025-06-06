@@ -26,6 +26,7 @@ def get_db_connection():
         raise
 
 # Создание таблиц
+conn = None
 try:
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -48,11 +49,12 @@ try:
 except Exception as e:
     logger.error(f"Ошибка создания таблиц: {str(e)}")
 finally:
-    if conn:
+    if 'conn' in locals() and conn is not None:
         conn.close()
 
 @app.route('/save-vilka', methods=['POST'])
 def save_vilka():
+    conn = None
     try:
         data = request.get_json()
         logger.info(f"Получены данные для вилки: {data}")
@@ -73,11 +75,12 @@ def save_vilka():
         logger.error(f"Ошибка сохранения вилки: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
-        if conn:
+        if 'conn' in locals() and conn is not None:
             conn.close()
 
 @app.route('/save-bonus', methods=['POST'])
 def save_bonus():
+    conn = None
     try:
         data = request.get_json()
         logger.info(f"Получены данные для бонуса: {data}")
@@ -98,11 +101,12 @@ def save_bonus():
         logger.error(f"Ошибка сохранения бонуса: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
-        if conn:
+        if 'conn' in locals() and conn is not None:
             conn.close()
 
 @app.route('/get-vilki', methods=['GET'])
 def get_vilki():
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -114,11 +118,12 @@ def get_vilki():
         logger.error(f"Ошибка получения вилок: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
-        if conn:
+        if 'conn' in locals() and conn is not None:
             conn.close()
 
 @app.route('/get-bonuses', methods=['GET'])
 def get_bonuses():
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -130,8 +135,13 @@ def get_bonuses():
         logger.error(f"Ошибка получения бонусов: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
-        if conn:
+        if 'conn' in locals() and conn is not None:
             conn.close()
+
+@app.route('/test', methods=['GET'])
+def test():
+    logger.info("Тестовый эндпоинт вызван")
+    return jsonify({"status": "success", "message": "Тест прошёл"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
