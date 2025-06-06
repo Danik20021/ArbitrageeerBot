@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить бонус</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3f51b5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добавить бонус</h1>
+        <form id="bonusForm">
+            <label>Дата</label>
+            <input type="date" id="date" required>
+            
+            <label>БК</label>
+            <input type="text" id="bk" placeholder="Например, Лига Ставок" required>
+            
+            <label>Тип бонуса</label>
+            <input type="text" id="type" placeholder="Например, Фрибет" required>
+            
+            <label>Сумма (₽)</label>
+            <input type="number" id="amount" placeholder="Например, 2222" required>
+            
+            <label>Условия</label>
+            <input type="text" id="conditions" placeholder="Например, Оборот 30к на кэф 1.5+" required>
+            
+            <label>Дедлайн</label>
+            <input type="date" id="deadline" required>
+            
+            <label>Статус</label>
+            <select id="status">
+                <option value="В процессе">В процессе</option>
+                <option value="Отыгран">Отыгран</option>
+                <option value="Просрочен">Просрочен</option>
+            </select>
+            
+            <label>Прибыль (₽)</label>
+            <input type="number" id="profit" placeholder="Например, 1500" required>
+            
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+
+        document.getElementById("bonusForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = {
+                date: document.getElementById("date").value,
+                bk: document.getElementById("bk").value,
+                type: document.getElementById("type").value,
+                amount: parseFloat(document.getElementById("amount").value),
+                conditions: document.getElementById("conditions").value,
+                deadline: document.getElementById("deadline").value,
+                status: document.getElementById("status").value,
+                profit: parseFloat(document.getElementById("profit").value)
+            };
+
+            fetch("https://твой-бэкенд.com/save-bonus", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                tg.showAlert("Бонус добавлен!");
+                tg.close();
+            })
+            .catch(error => {
+                tg.showAlert("Ошибка при сохранении!");
+            });
+        });
+    </script>
+</body>
+</html>

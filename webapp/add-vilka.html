@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить вилку</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3f51b5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добавить вилку</h1>
+        <form id="vilkaForm">
+            <label>Дата</label>
+            <input type="date" id="date" required>
+            
+            <label>Событие (Команда А - Команда Б)</label>
+            <input type="text" id="event" placeholder="Например, Спартак - Зенит" required>
+            
+            <label>БК 1</label>
+            <input type="text" id="bk1" placeholder="Например, Фонбет" required>
+            <label>Исход 1</label>
+            <input type="text" id="outcome1" placeholder="Например, П1" required>
+            <label>Коэффициент 1</label>
+            <input type="number" step="0.01" id="odds1" placeholder="Например, 2.1" required>
+            <label>Ставка 1 (₽)</label>
+            <input type="number" id="stake1" placeholder="Например, 1000" required>
+            
+            <label>БК 2</label>
+            <input type="text" id="bk2" placeholder="Например, Лига Ставок" required>
+            <label>Исход 2</label>
+            <input type="text" id="outcome2" placeholder="Например, П2" required>
+            <label>Коэффициент 2</label>
+            <input type="number" step="0.01" id="odds2" placeholder="Например, 2.3" required>
+            <label>Ставка 2 (₽)</label>
+            <input type="number" id="stake2" placeholder="Например, 913" required>
+            
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+
+        document.getElementById("vilkaForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = {
+                date: document.getElementById("date").value,
+                event: document.getElementById("event").value,
+                bk1: document.getElementById("bk1").value,
+                outcome1: document.getElementById("outcome1").value,
+                odds1: parseFloat(document.getElementById("odds1").value),
+                stake1: parseFloat(document.getElementById("stake1").value),
+                bk2: document.getElementById("bk2").value,
+                outcome2: document.getElementById("outcome2").value,
+                odds2_history: parseFloat(document.getElementById("odds2").value),
+                stake2: parseFloat(document.getElementById("stake2").value),
+                profit: (document.getElementById("odds1").value * document.getElementById("stake1").value) - 
+                        (document.getElementById("stake1").value + document.getElementById("stake2").value)
+            };
+
+            fetch("https://твой-бэкенд.com/save-vilka", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                tg.showAlert(`Вилка добавлена! Прибыль: ${data.profit} ₽`);
+                tg.close();
+            })
+            .catch(error => {
+                tg.showAlert("Ошибка при сохранении!");
+            });
+        });
+    </script>
+</body>
+</html>
