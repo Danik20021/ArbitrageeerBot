@@ -84,37 +84,35 @@
         const tg = window.Telegram.WebApp;
         tg.ready();
 
-        document.getElementById("vilkaForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const data = {
-                date: document.getElementById("date").value,
-                event: document.getElementById("event").value,
-                bk1: document.getElementById("bk1").value,
-                outcome1: document.getElementById("outcome1").value,
-                odds1: parseFloat(document.getElementById("odds1").value),
-                stake1: parseFloat(document.getElementById("stake1").value),
-                bk2: document.getElementById("bk2").value,
-                outcome2: document.getElementById("outcome2").value,
-                odds2_history: parseFloat(document.getElementById("odds2").value),
-                stake2: parseFloat(document.getElementById("stake2").value),
-                profit: (document.getElementById("odds1").value * document.getElementById("stake1").value) - 
-                        (document.getElementById("stake1").value + document.getElementById("stake2").value)
-            };
+        document.getElementById('vilka-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = {
+        date: document.getElementById('date').value,
+        event: document.getElementById('event').value,
+        bk1: document.getElementById('bk1').value,
+        outcome1: document.getElementById('outcome1').value,
+        odds1: parseFloat(document.getElementById('odds1').value),
+        stake1: parseFloat(document.getElementById('stake1').value),
+        bk2: document.getElementById('bk2').value,
+        outcome2: document.getElementById('outcome2').value,
+        odds2_history: parseFloat(document.getElementById('odds2_history').value),
+        stake2: parseFloat(document.getElementById('stake2').value),
+        profit: parseFloat(document.getElementById('profit').value)
+    };
 
-            fetch("https://твой-бэкенд.com/save-vilka", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                tg.showAlert(`Вилка добавлена! Прибыль: ${data.profit} ₽`);
-                tg.close();
-            })
-            .catch(error => {
-                tg.showAlert("Ошибка при сохранении!");
-            });
+    try {
+        const response = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/save-vilka', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
         });
+        const result = await response.json();
+        alert(result.message);
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+        alert('Ошибка сохранения вилки');
+    }
+});
     </script>
 </body>
 </html>
