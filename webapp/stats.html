@@ -1,6 +1,6 @@
 async function loadStats() {
     try {
-        const vilkiResponse = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/get-vilki');
+        const vilkiResponse = await fetch("https://arbitrageeerbot-backend-danik20021.koyeb.app/get-vilki");
         const vilki = await vilkiResponse.json();
         const vilkiTable = document.getElementById('vilki-table').getElementsByTagName('tbody')[0];
         vilkiTable.innerHTML = '';
@@ -19,7 +19,7 @@ async function loadStats() {
             row.insertCell().textContent = vilka.profit;
         });
 
-        const bonusesResponse = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/get-bonuses');
+        const bonusesResponse = await fetch("https://arbitrageeerbot-backend-danik20021.koyeb.app/get-bonuses");
         const bonuses = await bonusesResponse.json();
         const bonusesTable = document.getElementById('bonuses-table').getElementsByTagName('tbody')[0];
         bonusesTable.innerHTML = '';
