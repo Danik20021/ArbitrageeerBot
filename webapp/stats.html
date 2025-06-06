@@ -1,134 +1,42 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Статистика</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f0f2f5;
-        }
-        h1, h2 {
-            color: #333;
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #5c6bc0;
-            color: white;
-        }
-        .section {
-            margin-top: 40px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Статистика</h1>
+async function loadStats() {
+    try {
+        const vilkiResponse = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/get-vilki');
+        const vilki = await vilkiResponse.json();
+        const vilkiTable = document.getElementById('vilki-table').getElementsByTagName('tbody')[0];
+        vilkiTable.innerHTML = '';
+        vilki.forEach(vilka => {
+            const row = vilkiTable.insertRow();
+            row.insertCell().textContent = vilka.date;
+            row.insertCell().textContent = vilka.event;
+            row.insertCell().textContent = vilka.bk1;
+            row.insertCell().textContent = vilka.outcome1;
+            row.insertCell().textContent = vilka.odds1;
+            row.insertCell().textContent = vilka.stake1;
+            row.insertCell().textContent = vilka.bk2;
+            row.insertCell().textContent = vilka.outcome2;
+            row.insertCell().textContent = vilka.odds2_history;
+            row.insertCell().textContent = vilka.stake2;
+            row.insertCell().textContent = vilka.profit;
+        });
 
-    <div class="section">
-        <h2>Вилки</h2>
-        <table id="vilkaTable">
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Событие</th>
-                    <th>БК 1</th>
-                    <th>Исход 1</th>
-                    <th>Кэф 1</th>
-                    <th>Ставка 1</th>
-                    <th>БК 2</th>
-                    <th>Исход 2</th>
-                    <th>Кэф 2</th>
-                    <th>Ставка 2</th>
-                    <th>Прибыль</th>
-                </tr>
-            </thead>
-            <tbody id="vilkaTableBody"></tbody>
-        </table>
-    </div>
+        const bonusesResponse = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/get-bonuses');
+        const bonuses = await bonusesResponse.json();
+        const bonusesTable = document.getElementById('bonuses-table').getElementsByTagName('tbody')[0];
+        bonusesTable.innerHTML = '';
+        bonuses.forEach(bonus => {
+            const row = bonusesTable.insertRow();
+            row.insertCell().textContent = bonus.date;
+            row.insertCell().textContent = bonus.bk;
+            row.insertCell().textContent = bonus.type;
+            row.insertCell().textContent = bonus.amount;
+            row.insertCell().textContent = bonus.conditions;
+            row.insertCell().textContent = bonus.deadline;
+            row.insertCell().textContent = bonus.status;
+            row.insertCell().textContent = bonus.profit;
+        });
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
 
-    <div class="section">
-        <h2>Бонусы</h2>
-        <table id="bonusTable">
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>БК</th>
-                    <th>Тип бонуса</th>
-                    <th>Сумма</th>
-                    <th>Условия</th>
-                    <th>Дедлайн</th>
-                    <th>Статус</th>
-                    <th>Прибыль</th>
-                </tr>
-            </thead>
-            <tbody id="bonusTableBody"></tbody>
-        </table>
-    </div>
-
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-
-        // Загрузка вилок
-        fetch("https://твой-бэкенд.com/get-vilki")
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById("vilkaTableBody");
-                data.forEach(vilka => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${vilka.date}</td>
-                        <td>${vilka.event}</td>
-                        <td>${vilka.bk1}</td>
-                        <td>${vilka.outcome1}</td>
-                        <td>${vilka.odds1}</td>
-                        <td>${vilka.stake1}</td>
-                        <td>${vilka.bk2}</td>
-                        <td>${vilka.outcome2}</td>
-                        <td>${vilka.odds2_history}</td>
-                        <td>${vilka.stake2}</td>
-                        <td>${vilka.profit}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            });
-
-        // Загрузка бонусов
-        fetch("https://твой-бэкенд.com/get-bonuses")
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById("bonusTableBody");
-                data.forEach(bonus => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${bonus.date}</td>
-                        <td>${bonus.bk}</td>
-                        <td>${bonus.type}</td>
-                        <td>${bonus.amount}</td>
-                        <td>${bonus.conditions}</td>
-                        <td>${bonus.deadline}</td>
-                        <td>${bonus.status}</td>
-                        <td>${bonus.profit}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            });
-    </script>
-</body>
-</html>
+window.onload = loadStats;
