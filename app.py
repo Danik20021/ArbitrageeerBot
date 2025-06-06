@@ -4,7 +4,7 @@ import sqlite3
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})  # Разрешаем запросы с любого домена
 
 # Создание базы при запуске
 if not os.path.exists('arbitrage.db'):
