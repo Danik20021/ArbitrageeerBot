@@ -5,161 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Статистика</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            padding: 20px;
-            margin: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #5c6bc0;
-            color: white;
-        }
-        .loading {
-            text-align: center;
-            font-style: italic;
-            color: #666;
-        }
-        .error {
-            color: red;
-            text-align: center;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            display: none;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Статистика</h1>
-        <div id="error" class="error"></div>
-        <h2>Вилки</h2>
-        <table id="vilki-table">
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Событие</th>
-                    <th>БК 1</th>
-                    <th>Исход 1</th>
-                    <th>Коэф. 1</th>
-                    <th>Ставка 1</th>
-                    <th>БК 2</th>
-                    <th>Исход 2</th>
-                    <th>Коэф. 2</th>
-                    <th>Ставка 2</th>
-                    <th>Прибыль</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="11" class="loading">Загрузка...</td></tr>
-            </tbody>
-        </table>
-        <h2>Бонусы</h2>
-        <table id="bonuses-table">
-            <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>БК</th>
-                    <th>Тип</th>
-                    <th>Сумма</th>
-                    <th>Условия</th>
-                    <th>Дедлайн</th>
-                    <th>Статус</th>
-                    <th>Прибыль</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="8" class="loading">Загрузка...</td></tr>
-            </tbody>
-        </table>
-    </div>
+    <h1>Статистика</h1>
+    <h2>Вилки</h2>
+    <table id="vilki-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Событие</th>
+                <th>БК 1</th>
+                <th>Исход 1</th>
+                <th>Коэф 1</th>
+                <th>Ставка 1</th>
+                <th>БК 2</th>
+                <th>Исход 2</th>
+                <th>Коэф 2</th>
+                <th>Ставка 2</th>
+                <th>Прибыль</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <h2>Бонусы</h2>
+    <table id="bonuses-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>БК</th>
+                <th>Тип</th>
+                <th>Сумма</th>
+                <th>Условия</th>
+                <th>Дедлайн</th>
+                <th>Статус</th>
+                <th>Прибыль</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-
         async function loadStats() {
-            const errorDiv = document.getElementById('error');
-            const vilkiTable = document.getElementById('vilki-table')?.getElementsByTagName('tbody')[0];
-            const bonusesTable = document.getElementById('bonuses-table')?.getElementsByTagName('tbody')[0];
-            if (!vilkiTable || !bonusesTable) {
-                errorDiv.textContent = 'Ошибка: таблицы не найдены';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
             try {
-                // Загрузка вилок
                 const vilkiResponse = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/get-vilki');
-                if (!vilkiResponse.ok) throw new Error(`Ошибка сервера (вилки): ${vilkiResponse.status}`);
+                console.log("Ответ сервера (вилки):", vilkiResponse);
+                if (!vilkiResponse.ok) {
+                    throw new Error(`HTTP error! status: ${vilkiResponse.status}`);
+                }
                 const vilki = await vilkiResponse.json();
+                console.log("Вилки:", vilki);
+                const vilkiTable = document.getElementById('vilki-table').getElementsByTagName('tbody')[0];
                 vilkiTable.innerHTML = '';
-                if (vilki.length === 0) {
-                    vilkiTable.innerHTML = '<tr><td colspan="11">Нет данных о вилках</td></tr>';
-                } else {
-                    vilki.forEach(vilka => {
-                        const row = vilkiTable.insertRow();
-                        row.insertCell().textContent = new Date(vilka.date).toLocaleDateString('ru-RU');
-                        row.insertCell().textContent = vilka.event;
-                        row.insertCell().textContent = vilka.bk1;
-                        row.insertCell().textContent = vilka.outcome1;
-                        row.insertCell().textContent = vilka.odds1.toFixed(2);
-                        row.insertCell().textContent = vilka.stake1.toFixed(2) + ' ₽';
-                        row.insertCell().textContent = vilka.bk2;
-                        row.insertCell().textContent = vilka.outcome2;
-                        row.insertCell().textContent = vilka.odds2_history.toFixed(2);
-                        row.insertCell().textContent = vilka.stake2.toFixed(2) + ' ₽';
-                        row.insertCell().textContent = vilka.profit.toFixed(2) + ' ₽';
-                    });
-                }
+                vilki.forEach(vilka => {
+                    const row = vilkiTable.insertRow();
+                    row.insertCell().textContent = vilka.date;
+                    row.insertCell().textContent = vilka.event;
+                    row.insertCell().textContent = vilka.bk1;
+                    row.insertCell().textContent = vilka.outcome1;
+                    row.insertCell().textContent = vilka.odds1;
+                    row.insertCell().textContent = vilka.stake1;
+                    row.insertCell().textContent = vilka.bk2;
+                    row.insertCell().textContent = vilka.outcome2;
+                    row.insertCell().textContent = vilka.odds2_history;
+                    row.insertCell().textContent = vilka.stake2;
+                    row.insertCell().textContent = vilka.profit;
+                });
 
-                // Загрузка бонусов
                 const bonusesResponse = await fetch('https://arbitrageeerbot-backend-danik20021.koyeb.app/get-bonuses');
-                if (!bonusesResponse.ok) throw new Error(`Ошибка сервера (бонусы): ${bonusesResponse.status}`);
-                const bonuses = await bonusesResponse.json();
-                bonusesTable.innerHTML = '';
-                if (bonuses.length === 0) {
-                    bonusesTable.innerHTML = '<tr><td colspan="8">Нет данных о бонусах</td></tr>';
-                } else {
-                    bonuses.forEach(bonus => {
-                        const row = bonusesTable.insertRow();
-                        row.insertCell().textContent = new Date(bonus.date).toLocaleDateString('ru-RU');
-                        row.insertCell().textContent = bonus.bk;
-                        row.insertCell().textContent = bonus.type;
-                        row.insertCell().textContent = bonus.amount.toFixed(2) + ' ₽';
-                        row.insertCell().textContent = bonus.conditions;
-                        row.insertCell().textContent = new Date(bonus.deadline).toLocaleDateString('ru-RU');
-                        row.insertCell().textContent = bonus.status;
-                        row.insertCell().textContent = bonus.profit.toFixed(2) + ' ₽';
-                    });
+                console.log("Ответ сервера (бонусы):", bonusesResponse);
+                if (!bonusesResponse.ok) {
+                    throw new Error(`HTTP error! status: ${bonusesResponse.status}`);
                 }
+                const bonuses = await bonusesResponse.json();
+                console.log("Бонусы:", bonuses);
+                const bonusesTable = document.getElementById('bonuses-table').getElementsByTagName('tbody')[0];
+                bonusesTable.innerHTML = '';
+                bonuses.forEach(bonus => {
+                    const row = bonusesTable.insertRow();
+                    row.insertCell().textContent = bonus.date;
+                    row.insertCell().textContent = bonus.bk;
+                    row.insertCell().textContent = bonus.type;
+                    row.insertCell().textContent = bonus.amount;
+                    row.insertCell().textContent = bonus.conditions;
+                    row.insertCell().textContent = bonus.deadline;
+                    row.insertCell().textContent = bonus.status;
+                    row.insertCell().textContent = bonus.profit;
+                });
             } catch (error) {
                 console.error('Ошибка загрузки статистики:', error);
-                errorDiv.textContent = `Ошибка: ${error.message}`;
-                errorDiv.style.display = 'block';
+                alert(`Ошибка загрузки статистики: ${error.message}`);
             }
         }
 
