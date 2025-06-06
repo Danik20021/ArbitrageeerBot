@@ -28,10 +28,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         # Создаём кнопки с web_app
         keyboard = [
-            [KeyboardButton(text="Добавить вилку", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/add-vilka"})],
-            [KeyboardButton(text="Добавить бонус", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/add-bonus"})],
-            [KeyboardButton(text="Статистика", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/stats"})]
-        ]
+    [KeyboardButton(text="Добавить вилку", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/add-vilka"})],
+    [KeyboardButton(text="Добавить бонус", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/add-bonus"})],
+    [KeyboardButton(text="Статистика", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/stats"})]
+]
         logger.info("Клавиатура создана: %s", keyboard)
         
         # Отправляем сообщение с клавиатурой
