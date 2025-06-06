@@ -1,4 +1,5 @@
 import logging
+from logging import StreamHandler
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -12,7 +13,7 @@ file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(mes
 logger.addHandler(file_handler)
 
 # Логи в консоль
-console_handler = logging.StreamHandler()
+console_handler = StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 logger.addHandler(console_handler)
 
@@ -21,6 +22,10 @@ TOKEN = "7736199793:AAGDDXtTIDGVoiAb0u84EDvo9Ylol4kdTXA"
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info("Получена команда /start от пользователя %s", update.effective_user.id)
     try:
+        if not update.message:
+            logger.error("update.message отсутствует")
+            return
+
         # Создаём кнопки с web_app
         keyboard = [
             [KeyboardButton(text="Добавить вилку", web_app={"url": "https://arbitrageeerbot-webapp.netlify.app/add-vilka"})],

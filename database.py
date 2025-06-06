@@ -1,75 +1,114 @@
-import sqlite3
-from datetime import datetime
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+DATABASE_URL = 'postgres://koyeb-adm:npg_VwG31dKNezXr@ep-muddy-king-a2lzfc2n.eu-central-1.pg.koyeb.app/koyebdb'
 
 def init_db():
-    conn = sqlite3.connect("arbitrage.db")
-    c = conn.cursor()
-    
-    # Таблица для вилок
-    c.execute('''CREATE TABLE IF NOT EXISTS vilki (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT,
-        event TEXT,
-        bk1 TEXT,
-        outcome1 TEXT,
-        odds1 REAL,
-        stake1 REAL,
-        bk2 TEXT,
-        outcome2 TEXT,
-        odds2_history REAL,
-        stake2 REAL,
-        profit REAL
-    )''')
-    
-    # Таблица для бонусов
-    c.execute('''CREATE TABLE IF NOT EXISTS bonuses (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT,
-        bk TEXT,
-        type TEXT,
-        amount REAL,
-        conditions TEXT,
-        deadline TEXT,
-        status TEXT,
-        profit REAL
-    )''')
-    
-    conn.commit()
-    conn.close()
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.cursor_factory = RealDictCursor
+        c = conn.cursor()
+        
+        # Таблица для вилок
+        c.execute('''CREATE TABLE IF NOT EXISTS vilki (
+            id SERIAL PRIMARY KEY,
+            date TEXT,
+            event TEXT,
+            bk1 TEXT,
+            outcome1 TEXT,
+            odds1 REAL,
+            stake1 REAL,
+            bk2 TEXT,
+            outcome2 TEXT,
+            odds2_history REAL,
+            stake2 REAL,
+            profit REAL
+        )''')
+        
+        # Таблица для бонусов
+        c.execute('''CREATE TABLE IF NOT EXISTS bonuses (
+            id SERIAL PRIMARY KEY,
+            date TEXT,
+            bk TEXT,
+            type TEXT,
+            amount REAL,
+            conditions TEXT,
+            deadline TEXT,
+            status TEXT,
+            profit REAL
+        )''')
+        
+        conn.commit()
+    except Exception as e:
+        print(f"Ошибка создания таблиц: {str(e)}")
+    finally:
+        if conn:
+            conn.close()
 
 def add_vilka(date, event, bk1, outcome1, odds1, stake1, bk2, outcome2, odds2, stake2, profit):
-    conn = sqlite3.connect("arbitrage.db")
-    c = conn.cursor()
-    c.execute("INSERT INTO vilki (date, event, bk1, outcome1, odds1, stake1, bk2, outcome2, odds2_history, stake2, profit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-              (date, event, bk1, outcome1, odds1, stake1, bk2, outcome2, odds2, stake2, profit))
-    conn.commit()
-    conn.close()
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO vilki (date, event, bk1, outcome1, odds1, stake1, bk2, outcome2, odds2_history, stake2, profit)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (date, event, bk1, outcome1, odds1, stake1, bk2, outcome2, odds2, stake2, profit))
+        conn.commit()
+    except Exception as e:
+        print(f"Ошибка добавления вилки: {str(e)}")
+    finally:
+        if conn:
+            conn.close()
 
 def add_bonus(date, bk, type, amount, conditions, deadline, status, profit):
-    conn = sqlite3.connect("arbitrage.db")
-    c = conn.cursor()
-    c.execute("INSERT INTO bonuses (date, bk, type, amount, conditions, deadline, status, profit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-              (date, bk, type, amount, conditions, deadline, status, profit))
-    conn.commit()
-    conn.close()
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO bonuses (date, bk, type, amount, conditions, deadline, status, profit)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (date, bk, type, amount, conditions, deadline, status, profit))
+        conn.commit()
+    except Exception as e:
+        print(f"Ошибка добавления бонуса: {str(e)}")
+    finally:
+        if conn:
+            conn.close()
 
 def get_vilki():
-    conn = sqlite3.connect("arbitrage.db")
-    c = conn.cursor()
-    c.execute("SELECT * FROM vilki")
-    rows = c.fetchall()
-    conn.close()
-    return [{"id": row[0], "date": row[1], "event": row[2], "bk1": row[3], "outcome1": row[4], "odds1": row[5],
-             "stake1": row[6], "bk2": row[7], "outcome2": row[8], "odds2_history": row[9], "stake2": row[10], "profit": row[11]} for row in rows]
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.cursor_factory = RealDictCursor
+        c = conn.cursor()
+        c.execute("SELECT * FROM vilki")
+        rows = c.fetchall()
+        return rows
+    except Exception as e:
+        print(f"Ошибка получения вилок: {str(e)}")
+        return []
+    finally:
+        if conn:
+            conn.close()
 
 def get_bonuses():
-    conn = sqlite3.connect("arbitrage.db")
-    c = conn.cursor()
-    c.execute("SELECT * FROM bonuses")
-    rows = c.fetchall()
-    conn.close()
-    return [{"id": row[0], "date": row[1], "bk": row[2], "type": row[3], "amount": row[4], "conditions": row[5],
-             "deadline": row[6], "status": row[7], "profit": row[8]} for row in rows]
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.cursor_factory = RealDictCursor
+        c = conn.cursor()
+        c.execute("SELECT * FROM bonuses")
+        rows = c.fetchall()
+        return rows
+    except Exception as e:
+        print(f"Ошибка получения бонусов: {str(e)}")
+        return []
+    finally:
+        if conn:
+            conn.close()
 
 if __name__ == "__main__":
     init_db()

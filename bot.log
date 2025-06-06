@@ -278,3 +278,45 @@ telegram.error.NetworkError: httpx.RemoteProtocolError: Server disconnected with
 2025-06-06 10:35:54,499 - INFO - Scheduler has been shut down
 2025-06-06 10:35:54,512 - INFO - Application.stop() complete
 2025-06-06 10:35:54,513 - INFO - Бот завершил работу
+2025-06-06 12:25:36,425 - INFO - Запуск бота...
+2025-06-06 12:25:36,887 - INFO - Бот успешно инициализирован
+2025-06-06 12:25:36,887 - INFO - Обработчик команд добавлен
+2025-06-06 12:25:36,887 - INFO - Начинаем опрос Telegram API...
+2025-06-06 12:25:56,312 - INFO - Получена команда /start от пользователя 616752206
+2025-06-06 12:25:56,312 - INFO - Клавиатура создана: [[KeyboardButton(text='Добавить вилку', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-vilka'})], [KeyboardButton(text='Добавить бонус', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-bonus'})], [KeyboardButton(text='Статистика', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/stats'})]]
+2025-06-06 12:25:56,754 - INFO - Сообщение отправлено пользователю 616752206
+2025-06-06 13:17:18,518 - INFO - Запуск бота...
+2025-06-06 13:17:19,004 - INFO - Бот успешно инициализирован
+2025-06-06 13:17:19,004 - INFO - Обработчик команд добавлен
+2025-06-06 13:17:19,005 - INFO - Начинаем опрос Telegram API...
+2025-06-06 13:17:39,699 - INFO - Получена команда /start от пользователя 616752206
+2025-06-06 13:17:39,700 - INFO - Клавиатура создана: [[KeyboardButton(text='Добавить вилку', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-vilka'})], [KeyboardButton(text='Добавить бонус', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-bonus'})], [KeyboardButton(text='Статистика', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/stats'})]]
+2025-06-06 13:17:40,293 - INFO - Сообщение отправлено пользователю 616752206
+2025-06-06 13:20:58,020 - INFO - Бот завершил работу
+2025-06-06 13:28:02,638 - INFO - Запуск бота...
+2025-06-06 13:28:03,097 - INFO - Бот успешно инициализирован
+2025-06-06 13:28:03,097 - INFO - Обработчик команд добавлен
+2025-06-06 13:28:03,097 - INFO - Начинаем опрос Telegram API...
+2025-06-06 13:28:04,267 - INFO - Получена команда /start от пользователя 616752206
+2025-06-06 13:28:04,268 - INFO - Клавиатура создана: [[KeyboardButton(text='Добавить вилку', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-vilka'})], [KeyboardButton(text='Добавить бонус', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-bonus'})], [KeyboardButton(text='Статистика', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/stats'})]]
+2025-06-06 13:28:04,539 - INFO - Сообщение отправлено пользователю 616752206
+2025-06-06 13:47:57,378 - INFO - Бот завершил работу
+2025-06-06 13:48:26,138 - INFO - Запуск бота...
+2025-06-06 13:48:26,599 - INFO - Бот успешно инициализирован
+2025-06-06 13:48:26,599 - INFO - Обработчик команд добавлен
+2025-06-06 13:48:26,600 - INFO - Начинаем опрос Telegram API...
+2025-06-06 13:48:58,501 - INFO - Получена команда /start от пользователя 616752206
+2025-06-06 13:48:58,502 - INFO - Клавиатура создана: [[KeyboardButton(text='Добавить вилку', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-vilka'})], [KeyboardButton(text='Добавить бонус', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-bonus'})], [KeyboardButton(text='Статистика', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/stats'})]]
+2025-06-06 13:48:59,020 - INFO - Сообщение отправлено пользователю 616752206
+2025-06-06 13:51:20,014 - INFO - Получена команда /start от пользователя 616752206
+2025-06-06 13:51:20,015 - INFO - Клавиатура создана: [[KeyboardButton(text='Добавить вилку', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-vilka'})], [KeyboardButton(text='Добавить бонус', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-bonus'})], [KeyboardButton(text='Статистика', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/stats'})]]
+2025-06-06 13:51:20,500 - INFO - Сообщение отправлено пользователю 616752206
+2025-06-06 13:54:58,568 - INFO - Бот завершил работу
+2025-06-06 15:44:41,460 - INFO - Запуск бота...
+2025-06-06 15:44:41,921 - INFO - Бот успешно инициализирован
+2025-06-06 15:44:41,922 - INFO - Обработчик команд добавлен
+2025-06-06 15:44:41,922 - INFO - Начинаем опрос Telegram API...
+2025-06-06 15:45:17,065 - INFO - Получена команда /start от пользователя 616752206
+2025-06-06 15:45:17,065 - INFO - Клавиатура создана: [[KeyboardButton(text='Добавить вилку', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-vilka'})], [KeyboardButton(text='Добавить бонус', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/add-bonus'})], [KeyboardButton(text='Статистика', web_app={'url': 'https://arbitrageeerbot-webapp.netlify.app/stats'})]]
+2025-06-06 15:45:17,608 - INFO - Сообщение отправлено пользователю 616752206
+2025-06-06 16:02:18,984 - INFO - Бот завершил работу
