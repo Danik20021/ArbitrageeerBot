@@ -1,2 +1,4 @@
-__pycache__/
-arbitrage.db
+"__pycache__/" 
+"*.pyc" 
+"arbitrage.db" 
+"*.log" 
