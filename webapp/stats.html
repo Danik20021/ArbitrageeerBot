@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Статистика</h1>
+
+    <h2>Вилки</h2>
+    <table id="vilki-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Событие</th>
+                <th>БК 1</th>
+                <th>Исход 1</th>
+                <th>Коэф 1</th>
+                <th>Ставка 1</th>
+                <th>БК 2</th>
+                <th>Исход 2</th>
+                <th>Коэф 2</th>
+                <th>Ставка 2</th>
+                <th>Прибыль</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Бонусы</h2>
+    <table id="bonuses-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>БК</th>
+                <th>Тип</th>
+                <th>Сумма</th>
+                <th>Условия</th>
+                <th>Дедлайн</th>
+                <th>Статус</th>
+                <th>Прибыль</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function loadStats() {
+            try {
+                const vilkiResponse = await fetch('https://zuev20023.pythonanywhere.com/get-vilki');
+                if (!vilkiResponse.ok) {
+                    throw new Error(`Ошибка вилок: ${vilkiResponse.status}`);
+                }
+                const vilki = await vilkiResponse.json();
+                const vilkiTable = document.getElementById('vilki-table').getElementsByTagName('tbody')[0];
+                vilkiTable.innerHTML = '';
+                vilki.forEach(vilka => {
+                    const row = vilkiTable.insertRow();
+                    row.insertCell().textContent = vilka.date;
+                    row.insertCell().textContent = vilka.event;
+                    row.insertCell().textContent = vilka.bk1;
+                    row.insertCell().textContent = vilka.outcome1;
+                    row.insertCell().textContent = vilka.odds1;
+                    row.insertCell().textContent = vilka.stake1;
+                    row.insertCell().textContent = vilka.bk2;
+                    row.insertCell().textContent = vilka.outcome2;
+                    row.insertCell().textContent = vilka.odds2_history;
+                    row.insertCell().textContent = vilka.stake2;
+                    row.insertCell().textContent = vilka.profit;
+                });
+
+                const bonusesResponse = await fetch('https://zuev20023.pythonanywhere.com/get-bonuses');
+                if (!bonusesResponse.ok) {
+                    throw new Error(`Ошибка бонусов: ${bonusesResponse.status}`);
+                }
+                const bonuses = await bonusesResponse.json();
+                const bonusesTable = document.getElementById('bonuses-table').getElementsByTagName('tbody')[0];
+                bonusesTable.innerHTML = '';
+                bonuses.forEach(bonus => {
+                    const row = bonusesTable.insertRow();
+                    row.insertCell().textContent = bonus.date;
+                    row.insertCell().textContent = bonus.bk;
+                    row.insertCell().textContent = bonus.type;
+                    row.insertCell().textContent = bonus.amount;
+                    row.insertCell().textContent = bonus.conditions;
+                    row.insertCell().textContent = bonus.deadline;
+                    row.insertCell().textContent = bonus.status;
+                    row.insertCell().textContent = bonus.profit;
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки статистики:', error);
+                alert(`Ошибка загрузки статистики: ${error.message}`);
+            }
+        }
+
+        window.onload = loadStats;
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить бонус</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 5px; padding: 5px; width: 100%; max-width: 300px; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Добавить бонус</h1>
+    <form id="bonus-form">
+        <label>Дата: <input type="date" id="date" required></label>
+        <label>БК: <input type="text" id="bk" required></label>
+        <label>Тип: <input type="text" id="type" required></label>
+        <label>Сумма: <input type="number" step="0.01" id="amount" required></label>
+        <label>Условия: <input type="text" id="conditions" required></label>
+        <label>Дедлайн: <input type="date" id="deadline" required></label>
+        <label>Статус: <input type="text" id="status" required></label>
+        <label>Прибыль: <input type="number" step="0.01" id="profit" required></label>
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <script>
+        document.getElementById('bonus-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                date: document.getElementById('date').value,
+                bk: document.getElementById('bk').value,
+                type: document.getElementById('type').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                conditions: document.getElementById('conditions').value,
+                deadline: document.getElementById('deadline').value,
+                status: document.getElementById('status').value,
+                profit: parseFloat(document.getElementById('profit').value)
+            };
+
+            console.log("Отправляем данные:", formData);
+
+            try {
+                const response = await fetch('https://zuev20023.pythonanywhere.com/save-bonus', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                console.log("Ответ сервера:", response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log("Результат:", result);
+                alert(result.message);
+            } catch (error) {
+                console.error('Ошибка сохранения:', error);
+                alert(`Ошибка при сохранении: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+</html>

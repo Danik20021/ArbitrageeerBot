@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить вилку</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 5px; padding: 5px; width: 100%; max-width: 300px; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Добавить вилку</h1>
+    <form id="vilka-form">
+        <label>Дата: <input type="date" id="date" required></label>
+        <label>Событие: <input type="text" id="event" required></label>
+        <label>БК 1: <input type="text" id="bk1" required></label>
+        <label>Исход 1: <input type="text" id="outcome1" required></label>
+        <label>Коэффициент 1: <input type="number" step="0.01" id="odds1" required></label>
+        <label>Ставка 1: <input type="number" step="0.01" id="stake1" required></label>
+        <label>БК 2: <input type="text" id="bk2" required></label>
+        <label>Исход 2: <input type="text" id="outcome2" required></label>
+        <label>Коэффициент 2: <input type="number" step="0.01" id="odds2_history" required></label>
+        <label>Ставка 2: <input type="number" step="0.01" id="stake2" required></label>
+        <label>Прибыль: <input type="number" step="0.01" id="profit" required></label>
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <script>
+        document.getElementById('vilka-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                date: document.getElementById('date').value,
+                event: document.getElementById('event').value,
+                bk1: document.getElementById('bk1').value,
+                outcome1: document.getElementById('outcome1').value,
+                odds1: parseFloat(document.getElementById('odds1').value),
+                stake1: parseFloat(document.getElementById('stake1').value),
+                bk2: document.getElementById('bk2').value,
+                outcome2: document.getElementById('outcome2').value,
+                odds2_history: parseFloat(document.getElementById('odds2_history').value),
+                stake2: parseFloat(document.getElementById('stake2').value),
+                profit: parseFloat(document.getElementById('profit').value)
+            };
+
+            console.log("Отправляем данные:", formData);
+            try {
+                const response = await fetch('https://zuev20023.pythonanywhere.com/save-vilka', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || `HTTP error! status: ${response.status}`);
+                }
+                alert(result.message);
+            } catch (error) {
+                console.error('Ошибка сохранения:', error);
+                alert(`Ошибка при сохранении: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+</html>
